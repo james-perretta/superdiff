@@ -5,8 +5,8 @@ from typing import Sequence
 class Parser:
     def __init__(self,
                  ignore_case=False,
-                 ignore_inline_whitespace=False,
-                 ignore_inline_whitespace_changes=False,
+                 ignore_non_newline_whitespace=False,
+                 ignore_non_newline_whitespace_changes=False,
                  ignore_newline_changes=False,
                  ignore_blank_lines=False,
                  ignore_leading_whitespace=False,
@@ -26,7 +26,7 @@ class Parser:
             self._newline_regex += '(({0}|[ \t])*{0})?'.format(newline_chars)
 
         self._whitespace_regex = '[ \t]'
-        if ignore_inline_whitespace_changes:
+        if ignore_non_newline_whitespace_changes:
             # One or more whitespace chars
             self._whitespace_regex += '+'
 
@@ -36,8 +36,8 @@ class Parser:
 
         self._settings = self.Settings(
             ignore_case=ignore_case,
-            ignore_inline_whitespace=ignore_inline_whitespace,
-            ignore_inline_whitespace_changes=ignore_inline_whitespace_changes,
+            ignore_non_newline_whitespace=ignore_non_newline_whitespace,
+            ignore_non_newline_whitespace_changes=ignore_non_newline_whitespace_changes,
             ignore_newline_changes=ignore_newline_changes,
             ignore_blank_lines=ignore_blank_lines,
             ignore_leading_whitespace=ignore_leading_whitespace,
@@ -48,15 +48,15 @@ class Parser:
         # NOTE: we're only supporting \n \r and \r\n as newlines
         def __init__(self,
                      ignore_case=False,
-                     ignore_inline_whitespace=False,
-                     ignore_inline_whitespace_changes=False,
+                     ignore_non_newline_whitespace=False,
+                     ignore_non_newline_whitespace_changes=False,
                      ignore_newline_changes=False,
                      ignore_blank_lines=False,
                      ignore_leading_whitespace=False,
                      ignore_trailing_whitespace=False):
             self.ignore_case = ignore_case
-            self.ignore_inline_whitespace = ignore_inline_whitespace
-            self.ignore_inline_whitespace_changes = ignore_inline_whitespace_changes
+            self.ignore_non_newline_whitespace = ignore_non_newline_whitespace
+            self.ignore_non_newline_whitespace_changes = ignore_non_newline_whitespace_changes
             self.ignore_newline_changes = ignore_newline_changes
             self.ignore_blank_lines = ignore_blank_lines
             self.ignore_leading_whitespace = ignore_leading_whitespace
@@ -82,11 +82,9 @@ class Parser:
             token = token_factory(match.lastgroup, match, self._settings)
             tokens.append(token)
 
-            if not isinstance(token, NewlineToken):
-                continue
-
-            lines.append(Line(tokens, self._settings))
-            tokens = []
+            if isinstance(token, NewlineToken) or match.end() == len(text):
+                lines.append(Line(tokens, self._settings))
+                tokens = []
 
         return lines
 
@@ -188,10 +186,10 @@ class WhitespaceToken(Token):
     '''
 
     def _get_transformed_text(self):
-        if self._settings.ignore_inline_whitespace:
+        if self._settings.ignore_non_newline_whitespace:
             return ''
 
-        if self._settings.ignore_inline_whitespace_changes:
+        if self._settings.ignore_non_newline_whitespace_changes:
             return ' '
 
         return super()._get_transformed_text()
@@ -215,8 +213,8 @@ def main():
                ignore_case=False,
                ignore_leading_whitespace=False,
                ignore_trailing_whitespace=False,
-               ignore_inline_whitespace_changes=False,
-               ignore_inline_whitespace=False,
+               ignore_non_newline_whitespace_changes=False,
+               ignore_non_newline_whitespace=False,
                ignore_newline_changes=True)
     lines = p.parse(text)
 
