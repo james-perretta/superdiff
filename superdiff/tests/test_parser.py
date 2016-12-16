@@ -5,6 +5,8 @@ from superdiff.parser import Parser
 
 class _Base:
     def _check_transformed_lines(self, expected_lines, lines, original_text):
+        print(expected_lines)
+        print([line.transformed_text for line in lines])
         self.assertEqual(len(expected_lines), len(lines))
         for expected, line in zip(expected_lines, lines):
             self.assertEqual(expected, line.transformed_text)
@@ -147,7 +149,7 @@ class LeadingAndTrailingWhitespaceTestCase(_Base, unittest.TestCase):
         lines = parser.parse(self.text)
         expected_lines = [
             ' \t spam egg',
-            'sausage'
+            'sausage',
             ''
         ]
         self._check_transformed_lines(expected_lines, lines, self.text)
@@ -173,7 +175,7 @@ class ParserBlankLineSettingsTestCase(_Base, unittest.TestCase):
                      'waluigi\r \t \r\n'
                      'stove\n \n'
                      'stave\r \r'
-                     'stuve\r\n \r\n')
+                     'stuve\r\n\r\n \t ')
 
     def test_ignore_blank_lines(self):
         parser = Parser(ignore_blank_lines=True)
@@ -186,7 +188,8 @@ class ParserBlankLineSettingsTestCase(_Base, unittest.TestCase):
             'waluigi\r',
             'stove\n',
             'stave\r',
-            'stuve\r\n',
+            'stuve\r\n'
+            # ' \t '
         ]
         self._check_transformed_lines(expected_lines, lines, self.text)
 
@@ -201,7 +204,8 @@ class ParserBlankLineSettingsTestCase(_Base, unittest.TestCase):
             'waluigi\n',
             'stove\n',
             'stave\n',
-            'stuve\n',
+            'stuve\n'
+            # ' \t '
         ]
         self._check_transformed_lines(expected_lines, lines, self.text)
 

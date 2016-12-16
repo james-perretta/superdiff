@@ -2,6 +2,10 @@ import re
 from typing import Sequence
 
 
+_NEWLINE_CHARS = r'(\r\n)|(\r)|(\n)'  # KEEP THESE IN ORDER
+_NEWLINE_THEN_WHITESPACE = r'({newline}|[ \t])*'.format(newline=_NEWLINE_CHARS)
+
+
 class Parser:
     def __init__(self,
                  ignore_case=False,
@@ -11,19 +15,22 @@ class Parser:
                  ignore_blank_lines=False,
                  ignore_leading_whitespace=False,
                  ignore_trailing_whitespace=False):
-        # NOTE: Make sure that this regex is applied before the general
-        # whitespace one
-        newline_chars = '\r|\r\n|\n'
-        self._newline_regex = '({})'.format(newline_chars)
+        self._newline_regex = '({})'.format(_NEWLINE_CHARS)
         if ignore_newline_changes:
             self._newline_regex += '+'
 
         if ignore_blank_lines:
-            # To ignore blank lines, we capture zero or more newlines
-            # and whitespace chars, ending with a newline.
-            # The NewlineToken can then handle
-            # the additional information as needed.
-            self._newline_regex += '(({0}|[ \t])*{0})?'.format(newline_chars)
+            # When ignoring blank lines, we match any of the
+            # following (in order):
+            #   1. A 'newline sandwich' (any amount or kind of
+            #      whitespace surrounded by 2 newlines) followed
+            #      optionally by any amount of non-newline whitespace
+            #      and the end of the string.
+            #   2. A single newline char
+            self._newline_regex = (
+                r'({newline})({newline_then_whitespace})({newline})(([ \t]*$)?)|'
+                '({newline})').format(newline=_NEWLINE_CHARS,
+                                      newline_then_whitespace=_NEWLINE_THEN_WHITESPACE)
 
         self._whitespace_regex = '[ \t]'
         if ignore_non_newline_whitespace_changes:
@@ -167,14 +174,12 @@ class NewlineToken(Token):
     def __init__(self, regex_match, settings: Parser.Settings) -> None:
         super().__init__(regex_match, settings)
 
-    # @property
-    # def original_text(self) -> str:
-    #     return
-
     def _get_transformed_text(self) -> str:
-        if (self._settings.ignore_newline_changes or
-                self._settings.ignore_blank_lines):
+        if self._settings.ignore_newline_changes:
             return '\n'
+
+        if self._settings.ignore_blank_lines:
+            return re.match(_NEWLINE_CHARS, self._text).group()
 
         return super()._get_transformed_text()
 
