@@ -5,8 +5,6 @@ from superdiff.parser import Parser
 
 class _Base:
     def _check_transformed_lines(self, expected_lines, lines, original_text):
-        print(expected_lines)
-        print([line.transformed_text for line in lines])
         self.assertEqual(len(expected_lines), len(lines))
         for expected, line in zip(expected_lines, lines):
             self.assertEqual(expected, line.transformed_text)
@@ -20,6 +18,7 @@ class ParserMiscSettingsComboTestCase(_Base, unittest.TestCase):
             '\tspam egg  SAUSAGE\tspam   \n',
             '  \r\n',
             '\r',
+            ' \r',
             'WALUIGI\twuluigio    \t')
         self.text = ''.join(self.original_lines)
 
@@ -37,7 +36,7 @@ class ParserMiscSettingsComboTestCase(_Base, unittest.TestCase):
         expected_lines = [
             ' spam egg SAUSAGE spam \n',
             ' \n',
-            '\n',
+            ' \n',
             'WALUIGI wuluigio '
         ]
         self._check_transformed_lines(expected_lines, lines, self.text)
@@ -67,10 +66,8 @@ class ParserMiscSettingsComboTestCase(_Base, unittest.TestCase):
         )
         lines = parser.parse(self.text)
         expected_lines = [
-            'spam egg sausage spam',
-            '',
-            '',
-            'waluigi wuluigio'
+            'spameggsausagespam',
+            'waluigiwuluigio'
         ]
         self._check_transformed_lines(expected_lines, lines, self.text)
 
@@ -189,7 +186,6 @@ class ParserBlankLineSettingsTestCase(_Base, unittest.TestCase):
             'stove\n',
             'stave\r',
             'stuve\r\n'
-            # ' \t '
         ]
         self._check_transformed_lines(expected_lines, lines, self.text)
 
@@ -205,7 +201,6 @@ class ParserBlankLineSettingsTestCase(_Base, unittest.TestCase):
             'stove\n',
             'stave\n',
             'stuve\n'
-            # ' \t '
         ]
         self._check_transformed_lines(expected_lines, lines, self.text)
 
