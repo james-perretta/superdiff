@@ -38,7 +38,6 @@ class Parser:
             self._whitespace_regex += '+'
 
         # One or more non-whitespace chars.
-        # NOTE: Make sure that the number regex is applied before this one
         self._word_regex = r'\S+'
 
         self._settings = self.Settings(
@@ -206,33 +205,6 @@ def token_factory(token_type: str, regex_match, parser_settings):
 
 _TOKEN_TYPES = {
     'word': WordToken,
-    # 'number': NumberToken,
     'newline': NewlineToken,
     'whitespace': WhitespaceToken,
 }
-
-
-def main():
-    text = '   SPAM \n\n\r\n egg  \t  sausage cheese \r\n \n    \n       \nbutts'
-    p = Parser(ignore_blank_lines=False,
-               ignore_case=False,
-               ignore_leading_whitespace=False,
-               ignore_trailing_whitespace=False,
-               ignore_non_newline_whitespace_changes=False,
-               ignore_non_newline_whitespace=False,
-               ignore_newline_changes=True)
-    lines = p.parse(text)
-
-    for line in lines:
-        # for token in line._tokens:
-        #     print("'{}'".format(token.original_text))
-        print(line.original_text)
-
-    print('=' * 40)
-
-    for line in lines:
-        print(line.transformed_text)
-
-
-if __name__ == '__main__':
-    main()
