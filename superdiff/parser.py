@@ -104,6 +104,7 @@ class Line:
     def __init__(self, tokens: Sequence['Token'], settings: Parser.Settings) -> None:
         self._tokens = tokens
         self._settings = settings
+        self._hash = None  # type: int
 
     @property
     def transformed_text(self) -> str:
@@ -124,7 +125,19 @@ class Line:
         return ''.join(token.original_text for token in self._tokens)
 
     def __hash__(self):
-        return hash(self.transformed_text)
+        if self._hash is None:
+            self._hash = hash(self.transformed_text)
+
+        return self._hash
+
+    def __eq__(self, other):
+        if not isinstance(other, Line):
+            return False
+
+        return hash(self) == hash(other)
+
+    def __str__(self):
+        return self.original_text
 
 
 class Token:
