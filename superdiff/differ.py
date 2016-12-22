@@ -11,10 +11,13 @@ class Differ:
     return diff information in a variety of formats.
 
     Definitions of common terms used:
-        non-newline whitespace: Tabs and spaces
-        newline: Any of the following line endings: \n \r or \r\n
-        whitespace: A combination of newlines and non-newline whitespace
-        empty line: A line consisting of only whitespace
+
+    - non-newline whitespace: Tabs and spaces
+    - newline: Any of the following line endings: `\\\\n` `\\\\r` or
+      `\\\\r\\\\n`
+    - whitespace: A combination of newlines and non-newline whitespace
+    - empty line: A line consisting of only whitespace
+
     '''
 
     def __init__(self,
@@ -67,11 +70,13 @@ class Differ:
 
         Although this format results in some duplicated information in
         the case of exact matches, we use it for the following reasons:
-            1. When flexibility settings are turned on, first and
-               second may contain different text even if they are
-               considered equal.
-            2. Displaying a side-by-side diff from this format is
-               simpler than restoring from a list of deltas.
+
+        #. When flexibility settings are turned on, first and
+           second may contain different text even if they are
+           considered equal.
+        #. Displaying a side-by-side diff from this format is
+           simpler than restoring from a list of deltas.
+
         '''
         result = tuple()  # type: Iterable[Tuple[str, str]]
         parsed_first = self._parser.parse(first)

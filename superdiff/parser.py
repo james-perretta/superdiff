@@ -212,7 +212,10 @@ class WhitespaceToken(Token):
         return super()._get_transformed_text()
 
 
-def token_factory(token_type: str, regex_match, parser_settings):
+def token_factory(token_type: str, regex_match, parser_settings) -> Token:
+    '''
+    Instantiates a token of the specified type.
+    '''
     return _TOKEN_TYPES[token_type](regex_match, parser_settings)
 
 
