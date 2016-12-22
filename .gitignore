@@ -5,3 +5,5 @@ __pycache__
 venv
 *.sublime-*
 superdiff.egg-info
+docs/_build
+tags
