@@ -10,7 +10,7 @@ Flexibility options include:
 See the [documentation](http://superdiff.readthedocs.io/en/latest/) for more details about the options provided.
 
 ## Installation and Requirements
-superdiff requires Python 3.5 or later.
+This library requires Python 3. For versions earlier than Python 3.5, you must install the [typing package](https://pypi.python.org/pypi/typing)
 
 To install using pip: `pip install superdiff`
 
