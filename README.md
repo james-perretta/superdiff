@@ -7,7 +7,7 @@ Flexibility options include:
 - Ignoring different amounts of whitespace
 - Ignoring whitespace completely
 
-See the API docs for more details about the options provided.
+See the [documentation](http://superdiff.readthedocs.io/en/latest/) for more details about the options provided.
 
 ## Installation and Requirements
 superdiff requires Python 3.5 or later.
