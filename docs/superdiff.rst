@@ -1,17 +1,15 @@
-superdiff package
+superdiff API
 =================
 
-Submodules
-----------
-
-superdiff.differ module
------------------------
-
+superdiff.Differ
+----------------------
 .. automodule:: superdiff.differ
     :members:
     :undoc-members:
+    :special-members: __init__
 
-superdiff.parser module
+
+superdiff.parser
 -----------------------
 
 .. automodule:: superdiff.parser
@@ -20,10 +18,3 @@ superdiff.parser module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: superdiff
-    :members:
-    :undoc-members:
-    :show-inheritance:

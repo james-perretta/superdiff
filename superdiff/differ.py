@@ -6,15 +6,15 @@ from .parser import Parser
 
 
 class Differ:
-    '''
+    r'''
     This class can be used to flexibly compare two pieces of text and
     return diff information in a variety of formats.
 
     Definitions of common terms used:
 
     - non-newline whitespace: Tabs and spaces
-    - newline: Any of the following line endings: `\\\\n` `\\\\r` or
-      `\\\\r\\\\n`
+    - newline: Any of the following line endings: ``\n``, ``\r``, or
+      ``\r\n``
     - whitespace: A combination of newlines and non-newline whitespace
     - empty line: A line consisting of only whitespace
 
@@ -28,7 +28,7 @@ class Differ:
                  ignore_blank_lines: bool=False,
                  ignore_leading_whitespace: bool=False,
                  ignore_trailing_whitespace: bool=False) -> None:
-        '''
+        r'''
         :param ignore_case: Ignore case differences between the two
             texts.
         :param ignore_non_newline_whitespace: Completely ignore
@@ -40,7 +40,8 @@ class Differ:
             spaces will be considered equal.
         :param ignore_newline_changes: Treat consecutive sequences of
             newline characters as equal. For example, when this option
-            is True, \r, \r\r\n, and \n\n will all be considered equal.
+            is True, ``\r``, ``\r\r\n``, and ``\n\n`` will all be
+            considered equal.
         :param ignore_blank_lines: Ignore lines consisting of only
             whitespace.
         :param ignore_leading_whitespace: Ignore whitespace characters
