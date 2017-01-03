@@ -7,3 +7,5 @@ venv
 superdiff.egg-info
 docs/_build
 tags
+dist
+build
