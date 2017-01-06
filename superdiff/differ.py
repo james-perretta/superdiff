@@ -61,25 +61,19 @@ class Differ:
             ignore_trailing_whitespace=ignore_trailing_whitespace
         )
 
-    def compare(self, first: str, second: str) -> Iterable[Tuple[str, str]]:
+    def compare(self, first: str, second: str) -> Iterable[Tuple[str, str, str]]:
         '''
         Performs a line-by-line comparision of the strings first and
-        second and returns a sequence of pairs specifying the
-        differences between the strings.
+        second and returns a sequence of ``(tag, left, right)`` tuples
+        specifying the differences between the strings.
 
-        If the two strings are equal, returns an empty sequence.
+        ``tag`` can be any of the values of "tag" used in
+        https://docs.python.org/3.5/library/difflib.html#difflib.SequenceMatcher.get_opcodes
+        and have the same meanings.
 
-        Although this format results in some duplicated information in
-        the case of exact matches, we use it for the following reasons:
-
-        #. When flexibility settings are turned on, first and
-           second may contain different text even if they are
-           considered equal.
-        #. Displaying a side-by-side diff from this format is
-           simpler than restoring from a list of deltas.
-
+        If the two strings are equal, returns an empty iterable.
         '''
-        result = tuple()  # type: Iterable[Tuple[str, str]]
+        result = tuple()  # type: Iterable[Tuple[str, str, str]]
         parsed_first = self._parser.parse(first)
         parsed_second = self._parser.parse(second)
         matcher = difflib.SequenceMatcher(a=parsed_first, b=parsed_second)
@@ -94,7 +88,8 @@ class Differ:
                 (line.original_text for line in parsed_first[first_start:first_end]),
                 (line.original_text for line in parsed_second[second_start:second_end]),
                 fillvalue='')
-            result = itertools.chain(result, pairs)
+            tuples = [(tag,) + pair for pair in pairs]
+            result = itertools.chain(result, tuples)
 
         if sequences_equal:
             return tuple()
