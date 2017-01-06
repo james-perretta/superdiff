@@ -4,7 +4,7 @@
 from setuptools import setup
 
 setup(name='superdiff',
-      version='1.0.0',
+      version='1.0.1',
       description='A library for performing flexible diff checks.',
       author='James Perretta',
       author_email='jameslp@umich.edu',
