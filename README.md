@@ -19,8 +19,9 @@ To install using pip: `pip install superdiff`
 import superdiff
 
 exact_match_diff = superdiff.Differ().compare('spam', 'SPAM')
-print(list(exact_match_diff))  # Output: [('spam', 'SPAM')]
+print(list(exact_match_diff))  # Output: [(<opcode_string>, 'spam', 'SPAM')]
 
 case_insensitive_diff = superdiff.Differ(ignore_case=True).compare('spam', 'SPAM')
 print(list(case_insensitive_diff))  # Output: []
 ```
+See https://docs.python.org/3/library/difflib.html#difflib.SequenceMatcher.get_opcodes for a list of possible values for opcode_string in the output above.
